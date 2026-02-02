@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoMoreFap Ultra</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#22c55e"/>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="glow"></div>
+
+  <div class="app">
+
+    <div class="top">
+      <div class="brand">
+        <div class="brandLeft">
+          <div class="logo">⚡</div>
+          <div class="titleWrap">
+            <h1>NoMoreFap Ultra</h1>
+            <p>Streak • Calendar • Stats • Lock</p>
+          </div>
+        </div>
+        <button class="toggleBtn" onclick="toggleTheme()">🌓</button>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" id="tabHome" onclick="switchTab('home')">Home</div>
+        <div class="tab" id="tabStats" onclick="switchTab('stats')">Stats</div>
+        <div class="tab" id="tabSettings" onclick="switchTab('settings')">Settings</div>
+      </div>
+
+      <div class="quoteBox">
+        <div class="q" id="quoteText">Loading motivation...</div>
+        <div class="by" id="quoteBy"></div>
+      </div>
+
+      <div class="btnRow">
+        <button class="btnPrimary" onclick="markCleanDay()">✅ Mark Clean Day</button>
+        <button class="btnDanger" onclick="openResetFlow()">🔒 Reset</button>
+      </div>
+
+      <div class="btnRow">
+        <button class="btnGhost" onclick="newQuote()">✨ New Quote</button>
+        <button class="btnBlue" onclick="quickLock()">🧊 Quick Lock</button>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>Current Streak</h2>
+          <div class="big"><span id="streak">0</span> 🔥</div>
+          <div class="mini">Best: <span id="best">0</span> days</div>
+        </div>
+
+        <div class="card">
+          <h2>Goal Progress</h2>
+          <div class="big"><span id="goal">30</span> 🎯</div>
+          <div class="mini">Target days</div>
+          <div class="progressWrap"><div class="bar" id="bar"></div></div>
+          <div class="mini" style="margin-top:8px;"><span id="percent">0</span>% complete</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageHome">
+      <div class="section">
+        <div class="sectionTitle">🗓 Daily Streak Calendar</div>
+        <div class="mini" id="calTitle" style="margin-bottom:10px;"></div>
+        <div class="calendar" id="calendar"></div>
+        <div class="mini" style="margin-top:10px;">Green = Clean ✅ | Red = Relapse 🔴</div>
+      </div>
+
+      <div class="section">
+        <div class="sectionTitle">🧠 Daily Mood Check</div>
+        <select id="mood">
+          <option value="">Select mood</option>
+          <option>Happy 😊</option>
+          <option>Normal 😐</option>
+          <option>Stressed 😣</option>
+          <option>Urge High 🔥</option>
+          <option>Sad 😔</option>
+          <option>Focused 💪</option>
+        </select>
+
+        <div style="height:10px;"></div>
+        <textarea id="note" placeholder="Write your notes..."></textarea>
+
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btnPrimary" onclick="saveDailyLog()">💾 Save Log</button>
+          <button class="btnGhost" onclick="clearLog()">🧹 Clear</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sectionTitle">📜 Relapse History Logs</div>
+        <div class="mini">Every reset will be saved here with date & mood.</div>
+        <div class="history" id="historyList"></div>
+
+        <div class="smallBtns">
+          <button class="btnGhost" onclick="clearHistory()">🧹 Clear History</button>
+          <button class="btnGhost" onclick="downloadBackup()">⬇ Export</button>
+        </div>
+
+        <div style="height:10px;"></div>
+        <input type="file" id="importFile" accept=".json" />
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btnBlue" onclick="importBackup()">📥 Import Backup</button>
+          <button class="btnGhost" onclick="factoryReset()">⚠ Factory Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageStats" class="hide">
+      <div class="section">
+        <div class="sectionTitle">📊 Statistics</div>
+        <div class="mini">Weekly clean days (last 7 days)</div>
+        <div class="chart" id="weeklyChart"></div>
+
+        <div class="statsGrid">
+          <div class="card">
+            <h2>Total Clean Days</h2>
+            <div class="big"><span id="totalClean">0</span> ✅</div>
+          </div>
+          <div class="card">
+            <h2>Total Relapses</h2>
+            <div class="big"><span id="totalRelapse">0</span> 🔴</div>
+          </div>
+        </div>
+
+        <div class="statsGrid" style="margin-top:12px;">
+          <div class="card">
+            <h2>Success Rate</h2>
+            <div class="big"><span id="successRate">0</span>%</div>
+          </div>
+          <div class="card">
+            <h2>Goal</h2>
+            <div class="big"><span id="goalShow">30</span> 🎯</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageSettings" class="hide">
+      <div class="section">
+        <div class="sectionTitle">⚙ Settings</div>
+
+        <div class="mini">Change goal (days)</div>
+        <div style="height:8px;"></div>
+        <input id="goalInput" type="number" placeholder="Example: 30" />
+
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btnPrimary" onclick="saveGoal()">✅ Save Goal</button>
+          <button class="btnGhost" onclick="loadGoalToUI()">↩ Refresh</button>
+        </div>
+
+        <div style="height:14px;"></div>
+        <div class="mini">Password Lock</div>
+        <div style="height:8px;"></div>
+
+        <input id="passInput" type="password" placeholder="Set password (min 4)" />
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btnBlue" onclick="setPassword()">🔐 Set Password</button>
+          <button class="btnGhost" onclick="removePassword()">🗑 Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Offline ✅ Export/Import ✅ Password Lock ✅
+    </div>
+  </div>
+
+  <div class="modalOverlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modalTitle">🔒 Reset Lock Mode</div>
+      <div class="modalText">Type OTP: <b>RELAPSE</b></div>
+
+      <div class="otpRow" id="otpRow"></div>
+      <div class="lockTimer" id="lockTimer">Wait: 07s</div>
+
+      <div style="height:10px;"></div>
+      <input id="resetPasswordField" type="password" placeholder="Password (if set)" />
+
+      <div class="btnRow" style="margin-top:12px;">
+        <button class="btnGhost" onclick="closeModal()">Cancel</button>
+        <button class="btnDanger" id="confirmResetBtn" onclick="confirmReset()" disabled>Confirm Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js");
+    }
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>
